@@ -17,7 +17,7 @@ public class ConsultaJDBC {
     private static String BANCO;
     private static String USUARIO;
     private static String SENHA;
-    private static String SQL;
+    private static String SQL = "SELECT * FROM musica";
     public ConsultaJDBC() {
         final String SGBD = "Oracle"; //PostgreSQL, Oracle ou MySQL
 
@@ -30,9 +30,9 @@ public class ConsultaJDBC {
                 break;
             case "Oracle":
                 DRIVER = "oracle.jdbc.OracleDriver";
-                BANCO = "jdbc:oracle:thin:@10.10.10.66:1521:pdb02";
-                USUARIO = "unip"; //mudar aqui
-                SENHA = "unip"; // mudar aqui
+                BANCO = "jdbc:oracle:thin:@10.10.10.66:1521/pdb02";
+                USUARIO = "guilherme"; //mudar aqui
+                SENHA = "123"; // mudar aqui
                 break;
             case "MySQL":
                 DRIVER = "com.mysql.jdbc.Driver";
@@ -63,15 +63,14 @@ public class ConsultaJDBC {
             ResultSet rs = stm.executeQuery(SQL);
 
             //Exibir todos os registros do Result Set 
-            System.out.println("ID     NOME     DESC          PREÇO");
+            System.out.println("ID     NOME DA MUSICA          DURAÇAO");
 
             while (rs.next()) {
-                int id = rs.getInt("id");
-                String nome = rs.getString("prod_name");
-                String descricao = rs.getString("prod_desc");
-                double preco = rs.getDouble("prod_price");
+                int id = rs.getInt("MUS_ID");
+                String nome = rs.getString("MUS_NOME");
+                String duracao = rs.getString("MUS_DURACAO");
 
-                System.out.println(id + "   " + nome + "    " + descricao + "   " + preco);
+                System.out.println(id + "      " + nome + "             " + duracao );
             }
         } catch (ClassNotFoundException ex) {
             JOptionPane.showMessageDialog(null, "Erro na Classe de Conexao do Banco. \n" + ex.getMessage());
