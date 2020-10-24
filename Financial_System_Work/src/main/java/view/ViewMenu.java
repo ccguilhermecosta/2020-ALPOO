@@ -16,6 +16,10 @@ public class ViewMenu extends javax.swing.JFrame {
      */
     public ViewMenu() {
         initComponents();
+        setLocationRelativeTo(null);
+        setVisible(true);
+        pack();
+        
     }
 
     /**
@@ -43,6 +47,11 @@ public class ViewMenu extends javax.swing.JFrame {
         jMenuCadastros.setText("Cadastrar");
 
         jMenuItem4.setText("Endereços");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenuCadastros.add(jMenuItem4);
 
         jMenuItem1.setText("Clientes");
@@ -96,6 +105,13 @@ public class ViewMenu extends javax.swing.JFrame {
         view_cliente.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        ViewEnderecos enderecos = new ViewEnderecos();
+        enderecos.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     /**
      * @param args the command line arguments

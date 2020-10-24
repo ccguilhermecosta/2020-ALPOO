@@ -42,4 +42,9 @@ public class EnderecoController {
         EnderecoDao dao = new EnderecoDao();
         dao.alterar(usuario);
     }
+        
+         public void excluir(EnderecoModel endereco) throws SQLException {
+        EnderecoDao dao = new EnderecoDao();
+        dao.excluir(endereco);
+    }
 }

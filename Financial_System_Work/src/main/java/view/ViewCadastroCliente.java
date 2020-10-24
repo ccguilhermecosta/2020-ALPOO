@@ -16,10 +16,7 @@ public class ViewCadastroCliente extends javax.swing.JFrame {
     public ViewCadastroCliente() {
         //this.setPreferredSize(new Dimension(750, 650));
         initComponents();
-        setOperacao(""); // inicializa o form no modo CONSULTA
         setLocationRelativeTo(null);
-        setVisible(true);
-        pack();
         
     }
 

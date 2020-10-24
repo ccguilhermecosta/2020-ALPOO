@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package view;
 
 import controller.EnderecoController;
@@ -28,27 +23,41 @@ public class ViewEnderecos extends javax.swing.JFrame {
     // digite o objeto DefaultTableModel, neste exemplo é tabela(criado logo abaixo)
     private ArrayList<EnderecoModel> lista;
     private EnderecoTableModel tabela;
-    
+
+    private String getOperacao() {
+        return operacao;
+    }
+
     public ViewEnderecos() {
         initComponents();
-        
+        setLocationRelativeTo(null);
         consultar();
         // adiciona evento para qdo navegar no JTable, atualizar os dados nos JTextField´s
-        jTableConsulta.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        jTable1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
             @Override
             public void valueChanged(ListSelectionEvent evt) {
                 if (evt.getValueIsAdjusting()) {
                     return;
                 }
-                int selecionado = jTableConsulta.getSelectedRow();
+                int selecionado = jTable1.getSelectedRow();
                 if (selecionado >= 0) {
                     mostrar(lista.get(selecionado));
                 }
             }
         });
     }
-    
+
+    private void mostrar(EnderecoModel endereco) {
+        jTxtID_END.setText(String.valueOf(endereco.getID_ENDERECO()));
+        jComboTIPO.setSelectedItem(endereco.getTIPO());
+        jTxtLOGRADOURO.setText(endereco.getLOGRADOURO());
+        jTxtCEP.setText(endereco.getCEP());
+        jTxtNUMERO.setText(String.valueOf(endereco.getNUMERO()));
+        jTxtCIDADE.setText(endereco.getCIDADE());
+        jComboESTADO.setSelectedItem(endereco.getESTADO());
+    }
+
     private void consultar() {
         try {
             String condicao = filtroConsulta();
@@ -59,14 +68,14 @@ public class ViewEnderecos extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Não Existem Usuários Cadastrados !");
             } else {
                 tabela = new EnderecoTableModel(lista, colunas);
-                jTableConsulta.setModel(tabela);
-                jTableConsulta.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                jTable1.setModel(tabela);
+                jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro na Consulta do Usuário \n" + ex.getMessage());
         }
     }
-    
+
     private String filtroConsulta() {
         String condicao = "";
         if (!jTxtID_END.getText().trim().equals("")) {
@@ -82,27 +91,32 @@ public class ViewEnderecos extends javax.swing.JFrame {
             if (!condicao.isEmpty()) {
                 condicao += " AND ";
             }
-        if (!jTxtCEP.getText().trim().equals("")) {
-            if (!condicao.isEmpty()) {
-                condicao += " AND ";
+            if (!jTxtCEP.getText().trim().equals("")) {
+                if (!condicao.isEmpty()) {
+                    condicao += " AND ";
+                }
+                if (!jTxtNUMERO.getText().trim().equals("")) {
+                    if (!condicao.isEmpty()) {
+                        condicao += " AND ";
+                    }
+                    if (!jTxtCIDADE.getText().trim().equals("")) {
+                        if (!condicao.isEmpty()) {
+                            condicao += " AND ";
+                        }
+                        if (!jComboESTADO.getSelectedItem().equals("")) {
+                            if (!condicao.isEmpty()) {
+                                condicao += " AND ";
+                            }
+                            condicao += "( upper(LOGRADOURO) LIKE ('%" + jTxtLOGRADOURO.getText().toUpperCase() + "%'))";
+                        }
+                    }
+                }
             }
-        if (!jTxtNUMERO.getText().trim().equals("")) {
-            if (!condicao.isEmpty()) {
-                condicao += " AND ";
-            }
-        if (!jTxtCIDADE.getText().trim().equals("")) {
-            if (!condicao.isEmpty()) {
-                condicao += " AND ";
-            }
-        if (!jComboESTADO.getSelectedItem().equals("")) {
-            if (!condicao.isEmpty()) {
-                condicao += " AND ";
-            }
-            condicao += "( upper(LOGRADOURO) LIKE ('%" + jTxtLOGRADOURO.getText().toUpperCase() + "%'))";
         }
-    }
         return condicao;
     }
+
+    ;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -129,6 +143,9 @@ public class ViewEnderecos extends javax.swing.JFrame {
         jComboTIPO = new javax.swing.JComboBox<>();
         jComboESTADO = new javax.swing.JComboBox<>();
         jBttnCadastrar = new javax.swing.JButton();
+        jBttnConsultar = new javax.swing.JButton();
+        jBttnAlterar = new javax.swing.JButton();
+        jBttnExcluir = new javax.swing.JButton();
         jTableConsulta = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
@@ -150,11 +167,29 @@ public class ViewEnderecos extends javax.swing.JFrame {
 
         jLabel7.setText("ESTADO");
 
+        jTxtID_END.setEditable(false);
+
         jComboTIPO.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "RUA", "AVENIDA", "TRAVESSA", "ALAMEDA" }));
 
         jComboESTADO.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"  }));
 
         jBttnCadastrar.setText("CADASTRAR");
+        jBttnCadastrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBttnCadastrarActionPerformed(evt);
+            }
+        });
+
+        jBttnConsultar.setText("CONSULTAR");
+
+        jBttnAlterar.setText("ALTERAR");
+
+        jBttnExcluir.setText("EXCLUIR");
+        jBttnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBttnExcluirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -180,6 +215,12 @@ public class ViewEnderecos extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jComboESTADO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jBttnExcluir)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jBttnAlterar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jBttnConsultar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jBttnCadastrar))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel4)
@@ -218,7 +259,10 @@ public class ViewEnderecos extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(jComboESTADO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jBttnCadastrar))
+                    .addComponent(jBttnCadastrar)
+                    .addComponent(jBttnConsultar)
+                    .addComponent(jBttnAlterar)
+                    .addComponent(jBttnExcluir))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -248,43 +292,60 @@ public class ViewEnderecos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ViewEnderecos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ViewEnderecos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ViewEnderecos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ViewEnderecos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void jBttnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBttnCadastrarActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ViewEnderecos().setVisible(true);
+        if (JOptionPane.showConfirmDialog(null, "Confirma Gravação deste Endereço ?",
+                "Confirmação", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            try {
+                EnderecoModel objeto = new EnderecoModel();
+                objeto.setID_ENDERECO(Integer.parseInt(jTxtID_END.getText()));
+                objeto.setTIPO(jComboTIPO.getSelectedItem().toString());
+                objeto.setLOGRADOURO(jTxtLOGRADOURO.getText());
+                objeto.setCEP(jTxtCEP.getText());
+                objeto.setNUMERO(Integer.parseInt(jTxtNUMERO.getText()));
+                objeto.setCIDADE(jTxtCIDADE.getText());
+                objeto.setESTADO(jComboESTADO.getSelectedItem().toString());
+                EnderecoController controller = new EnderecoController();
+                controller.gravar(getOperacao(), objeto);
+
+                JOptionPane.showMessageDialog(null, "Dados Gravados com Sucesso");
+                consultar();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Erro na Gravação \n" + ex.getMessage());
             }
-        });
-    }
+        }
+    }//GEN-LAST:event_jBttnCadastrarActionPerformed
+
+    private void jBttnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBttnExcluirActionPerformed
+
+        if (JOptionPane.showConfirmDialog(null, "Confirma Exclusão deste Registro ?",
+                "Confirmação", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            try {
+                EnderecoModel objeto = new EnderecoModel();
+                objeto.setID_ENDERECO(Integer.parseInt(jTxtID_END.getText()));
+                objeto.setTIPO(jComboTIPO.getSelectedItem().toString());
+                objeto.setLOGRADOURO(jTxtLOGRADOURO.getText());
+                objeto.setCEP(jTxtCEP.getText());
+                objeto.setNUMERO(Integer.parseInt(jTxtNUMERO.getText()));
+                objeto.setCIDADE(jTxtCIDADE.getText());
+                objeto.setESTADO(jComboESTADO.getSelectedItem().toString());
+
+                EnderecoController controller = new EnderecoController();
+                controller.excluir(objeto);
+
+                JOptionPane.showMessageDialog(null, "Registro Excluído com Sucesso");
+                consultar();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Erro na Exclusão de Registro \n" + ex.getMessage());
+            }
+        }
+    }//GEN-LAST:event_jBttnExcluirActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBttnAlterar;
     private javax.swing.JButton jBttnCadastrar;
+    private javax.swing.JButton jBttnConsultar;
+    private javax.swing.JButton jBttnExcluir;
     private javax.swing.JComboBox<String> jComboESTADO;
     private javax.swing.JComboBox<String> jComboTIPO;
     private javax.swing.JLabel jLabel1;
@@ -303,4 +364,5 @@ public class ViewEnderecos extends javax.swing.JFrame {
     private javax.swing.JTextField jTxtLOGRADOURO;
     private javax.swing.JTextField jTxtNUMERO;
     // End of variables declaration//GEN-END:variables
+
 }

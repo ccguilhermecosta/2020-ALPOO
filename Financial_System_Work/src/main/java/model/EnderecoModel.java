@@ -18,6 +18,10 @@ public class EnderecoModel {
     private int NUMERO;
     private String CIDADE;
     private String ESTADO;
+    
+    public EnderecoModel(){
+        
+    }
 
     public EnderecoModel(int ID_ENDERECO, String TIPO, String LOGRADOURO, String CEP, int NUMERO, String CIDADE, String ESTADO) {
         this.ID_ENDERECO = ID_ENDERECO;

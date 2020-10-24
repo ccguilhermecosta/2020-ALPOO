@@ -5,7 +5,8 @@
  */
 package principal;
 import connection.Conexao;
-import view.ViewCadastroCliente;
+import view.ViewMenu;
+
 
 /**
  *
@@ -13,15 +14,15 @@ import view.ViewCadastroCliente;
  */
 public class Principal {
     Conexao objconexao;
-    ViewCadastroCliente clienteview;
+    ViewMenu viewmenu;
 
     public Principal() {
         objconexao = new Conexao();
-        clienteview = new ViewCadastroCliente();
+        ViewMenu menu = new ViewMenu();
     }
 
     public static void main(String[] args) {
-        Principal mvc_dao = new Principal();
+        Principal principal = new Principal();
     }
     
 }
